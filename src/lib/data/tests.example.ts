@@ -37,8 +37,6 @@ export const TESTS: Record<number, TestData> = {
           { label: 'D', text: 'Canaries that are' },
         ],
         answer: 'B',
-        // Optional: explanation shown after answering in practice mode
-        explanation: '"Canaries" is the correct subject. The other options create redundant or incorrect clauses.',
       },
       {
         id: 2, type: 'structure',
@@ -50,7 +48,6 @@ export const TESTS: Record<number, TestData> = {
           { label: 'D', text: 'The value' },
         ],
         answer: 'D',
-        explanation: '"The value" is the correct noun phrase to serve as subject of the sentence.',
       },
       // Add questions 3–15 following the same pattern...
 
@@ -63,14 +60,12 @@ export const TESTS: Record<number, TestData> = {
         segments: [o('A','Light'), t(' can '), o('B','travels'), t(' from the Sun to the Earth '), o('C','in'), t(' eight minutes and twenty '), o('D','seconds'), t('.')],
         answer: 'B',
         correction: 'travel',
-        explanation: 'After a modal verb ("can"), the base form of the verb is required: "travel", not "travels".',
       },
       {
         id: 17, type: 'written_expression',
         segments: [t('Every human '), o('A','typically'), t(' '), o('B','have'), t(' twenty-three pairs of chromosomes in '), o('C','most'), t(' '), o('D','cells'), t('.')],
         answer: 'B',
         correction: 'has',
-        explanation: '"Every human" is singular, so the verb must be "has", not "have".',
       },
       // Add questions 18–40 following the same pattern...
     ],
