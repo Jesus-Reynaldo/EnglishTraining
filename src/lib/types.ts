@@ -1,5 +1,6 @@
 export type OptionLabel = 'A' | 'B' | 'C' | 'D';
 export type TestMode = 'practice' | 'exam';
+export type Section = 'structure' | 'reading';
 
 export interface StructureOption {
   label: OptionLabel;
@@ -55,4 +56,40 @@ export interface ScoreBreakdown {
   weTotal: number;
   totalCorrect: number;
   totalQuestions: number;
+}
+
+// Reading Comprehension types
+
+export interface ReadingOption {
+  label: OptionLabel;
+  text: string;
+}
+
+export interface ReadingQuestion {
+  id: string;
+  text: string;
+  options: ReadingOption[];
+  answer: OptionLabel;
+  passageId: string;
+}
+
+export interface ReadingPassage {
+  id: string;
+  title: string;
+  text: string;
+}
+
+export interface ReadingTestData {
+  id: string;
+  title: string;
+  passages: ReadingPassage[];
+  questions: ReadingQuestion[];
+}
+
+export interface ReadingTestSession {
+  testId: string;
+  mode: TestMode;
+  answers: Record<string, OptionLabel>;
+  currentIndex: number;
+  isComplete: boolean;
 }

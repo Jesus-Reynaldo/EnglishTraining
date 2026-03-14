@@ -47,3 +47,4 @@ CLAUDE.md
 
 # sensitive data — stored in Supabase
 src/lib/data/tests.ts
+reading-tests.ts
