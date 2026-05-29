@@ -1,39 +1,33 @@
-import { createClient } from '@/lib/supabase/client';
-import { ReadingTestData, ReadingPassage, ReadingQuestion, OptionLabel } from '@/lib/types';
+import { prisma } from '@/lib/prisma'
+import { ReadingTestData, ReadingPassage, ReadingQuestion, OptionLabel } from '@/lib/types'
 
 export async function fetchReadingTests(): Promise<Omit<ReadingTestData, 'questions' | 'passages'>[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase.from('reading_tests').select('*').order('id');
-  if (error) throw error;
-  return (data ?? []).map((t) => ({ id: t.id, title: t.title }));
+  const tests = await prisma.readingTest.findMany({ orderBy: { id: 'asc' } })
+  return tests.map((t) => ({ id: t.id, title: t.title }))
 }
 
 export async function fetchReadingTestWithData(id: string): Promise<ReadingTestData> {
-  const supabase = createClient();
-  const [{ data: t, error: te }, { data: ps, error: pe }, { data: qs, error: qe }] =
-    await Promise.all([
-      supabase.from('reading_tests').select('*').eq('id', id).single(),
-      supabase.from('reading_passages').select('*').eq('test_id', id).order('order_index'),
-      supabase.from('reading_questions').select('*').eq('test_id', id).order('order_index'),
-    ]);
+  const t = await prisma.readingTest.findUniqueOrThrow({
+    where: { id },
+    include: {
+      passages: { orderBy: { orderIndex: 'asc' } },
+      questions: { orderBy: { orderIndex: 'asc' } },
+    },
+  })
 
-  if (te) throw te;
-  if (pe) throw pe;
-  if (qe) throw qe;
-
-  const passages: ReadingPassage[] = (ps ?? []).map((p) => ({
+  const passages: ReadingPassage[] = t.passages.map((p) => ({
     id: p.id,
     title: p.title,
     text: p.text,
-  }));
+  }))
 
-  const questions: ReadingQuestion[] = (qs ?? []).map((q) => ({
+  const questions: ReadingQuestion[] = t.questions.map((q) => ({
     id: q.id,
-    passageId: q.passage_id,
+    passageId: q.passageId,
     text: q.text,
-    options: q.options,
+    options: q.options as unknown as ReadingQuestion['options'],
     answer: q.answer as OptionLabel,
-  }));
+  }))
 
-  return { id: t.id, title: t.title, passages, questions };
+  return { id: t.id, title: t.title, passages, questions }
 }

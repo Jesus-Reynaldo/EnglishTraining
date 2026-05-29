@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { OptionLabel, TestData } from '@/lib/types';
-import { fetchTestWithQuestions } from '@/lib/data/api';
 import ScoreSummary from '@/components/review/ScoreSummary';
 import ReviewCard from '@/components/review/ReviewCard';
 
@@ -22,7 +21,8 @@ export default function ReviewPage() {
       try { setAnswers(JSON.parse(raw)); } catch { setAnswers({}); }
     }
 
-    fetchTestWithQuestions(testId)
+    fetch(`/api/tests/${testId}`)
+      .then((r) => r.json())
       .then(setTest)
       .catch(() => setTest(null))
       .finally(() => setLoaded(true));

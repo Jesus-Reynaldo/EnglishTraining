@@ -3,7 +3,6 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useTestSession } from '@/hooks/useTestSession';
-import { fetchTestWithQuestions } from '@/lib/data/api';
 import { OptionLabel, TestMode, TestData } from '@/lib/types';
 import ProgressBar from '@/components/test/ProgressBar';
 import StructureQuestion from '@/components/test/StructureQuestion';
@@ -43,7 +42,8 @@ export default function TestPage() {
   } = useTestSession();
 
   useEffect(() => {
-    fetchTestWithQuestions(testId)
+    fetch(`/api/tests/${testId}`)
+      .then((r) => r.json())
       .then((t) => {
         setTest(t);
         startTest(testId, mode, t.questions);

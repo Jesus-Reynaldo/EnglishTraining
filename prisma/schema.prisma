@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model TestSession {
+  id          String   @id @default(uuid())
+  testId      Int      @map("test_id")
+  mode        String
+  answers     Json     @default("{}")
+  score       Int?
+  total       Int?
+  completedAt DateTime @default(now()) @map("completed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("test_sessions")
+}
+
+model ReadingTest {
+  id        String            @id @default(uuid())
+  title     String
+  passages  ReadingPassage[]
+  questions ReadingQuestion[]
+
+  @@map("reading_tests")
+}
+
+model ReadingPassage {
+  id         String            @id @default(uuid())
+  testId     String            @map("test_id")
+  orderIndex Int               @default(0) @map("order_index")
+  title      String
+  text       String
+  test       ReadingTest       @relation(fields: [testId], references: [id], onDelete: Cascade)
+  questions  ReadingQuestion[]
+
+  @@map("reading_passages")
+}
+
+model ReadingQuestion {
+  id         String         @id @default(uuid())
+  testId     String         @map("test_id")
+  passageId  String         @map("passage_id")
+  orderIndex Int            @default(0) @map("order_index")
+  text       String
+  options    Json
+  answer     String
+  test       ReadingTest    @relation(fields: [testId], references: [id], onDelete: Cascade)
+  passage    ReadingPassage @relation(fields: [passageId], references: [id], onDelete: Cascade)
+
+  @@map("reading_questions")
+}

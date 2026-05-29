@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { OptionLabel, ReadingTestData } from '@/lib/types';
-import { fetchReadingTestWithData } from '@/lib/data/reading-api';
 
 export default function ReadingReviewPage() {
   const params = useParams();
@@ -19,7 +18,8 @@ export default function ReadingReviewPage() {
     if (raw) {
       try { setAnswers(JSON.parse(raw)); } catch { setAnswers({}); }
     }
-    fetchReadingTestWithData(testId)
+    fetch(`/api/reading/${testId}`)
+      .then((r) => r.json())
       .then(setTest)
       .catch(() => setTest(null))
       .finally(() => setLoaded(true));

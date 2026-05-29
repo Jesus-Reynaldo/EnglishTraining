@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { TestMode, TestData, Section } from '@/lib/types';
-import { fetchTests } from '@/lib/data/api';
-import { fetchReadingTests } from '@/lib/data/reading-api';
 import ModeSelector from '@/components/home/ModeSelector';
 import TestCard from '@/components/home/TestCard';
 import ReadingTestCard from '@/components/home/ReadingTestCard';
@@ -17,8 +15,8 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchTests().then(setTests).catch(console.error);
-    fetchReadingTests().then(setReadingTests).catch(console.error);
+    fetch('/api/tests').then((r) => r.json()).then(setTests).catch(console.error);
+    fetch('/api/reading').then((r) => r.json()).then(setReadingTests).catch(console.error);
   }, []);
 
   return (

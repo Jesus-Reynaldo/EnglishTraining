@@ -3,7 +3,6 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useReadingSession } from '@/hooks/useReadingSession';
-import { fetchReadingTestWithData } from '@/lib/data/reading-api';
 import { OptionLabel, TestMode, ReadingTestData, ReadingPassage } from '@/lib/types';
 import ProgressBar from '@/components/test/ProgressBar';
 import ReadingPassageView from '@/components/reading/ReadingPassageView';
@@ -42,7 +41,8 @@ export default function ReadingTestPage() {
   } = useReadingSession();
 
   useEffect(() => {
-    fetchReadingTestWithData(testId)
+    fetch(`/api/reading/${testId}`)
+      .then((r) => r.json())
       .then((t) => {
         setTest(t);
         startSession(testId, mode, t.questions);

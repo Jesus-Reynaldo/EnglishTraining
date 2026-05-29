@@ -70,23 +70,16 @@ export function useTestSession() {
   }, []);
 
   const submitExam = useCallback(async () => {
-    if (
-      process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    ) {
-      try {
-        const { createClient } = await import('@/lib/supabase/client');
-        const supabase = createClient();
-        await supabase.from('test_sessions').insert({
-          test_id: state.testId,
-          mode: state.mode,
-          answers: state.answers,
-        });
-      } catch (err) {
-        console.warn('Supabase save failed:', err);
-      }
+    try {
+      await fetch('/api/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ testId: state.testId, mode: state.mode, answers: state.answers }),
+      })
+    } catch (err) {
+      console.warn('Session save failed:', err)
     }
-    setState((prev) => ({ ...prev, isComplete: true }));
+    setState((prev) => ({ ...prev, isComplete: true }))
   }, [state.testId, state.mode, state.answers]);
 
   const reset = useCallback(() => setState(INITIAL_STATE), []);

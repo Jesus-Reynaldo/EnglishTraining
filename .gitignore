@@ -45,6 +45,9 @@ next-env.d.ts
 #claude
 CLAUDE.md
 
-# sensitive data — stored in Supabase
+# sensitive data
 src/lib/data/tests.ts
 reading-tests.ts
+
+# prisma generated client
+src/generated/
