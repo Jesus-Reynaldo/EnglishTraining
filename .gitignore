@@ -46,7 +46,6 @@ next-env.d.ts
 CLAUDE.md
 
 # sensitive data
-src/lib/data/tests.ts
 reading-tests.ts
 
 # prisma generated client
